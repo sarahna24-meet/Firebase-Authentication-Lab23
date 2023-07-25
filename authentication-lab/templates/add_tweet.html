@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-<form action="/tweet" method="POST"> <input type = "title" id = "title" name = "title"> <input type = "text" id = "text" name = "text"> </form>
 
 <html lang="en">
 <head>
@@ -9,5 +8,19 @@
 </head>
 <body>
     Great Job!
+
+    <form action="/add_tweet" method="POST">
+        <lable>title</lable>
+        <br>
+        <input type = "title" id = "title" name = "title"> 
+        <br>
+        <label>tweet!</label>
+        <br>
+        <input type = "text" id = "text" name = "text" maxlength="280"> 
+        <br>
+        <br>
+        <input type="submit" name="submit">
+    </form>
+
 </body>
 </html>

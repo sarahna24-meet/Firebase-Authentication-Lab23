@@ -27,7 +27,7 @@ def signin():
         email = request.form['email']
         password = request.form['password']
         try:
-            login_session['user'] = auth.sign_in_with_email_and_password('email','password')
+            login_session['user'] = auth.sign_in_with_email_and_password(email,password)
             return redirect(url_for('add_tweet'))
         except:
             error = "Authentication Failed"    
@@ -42,13 +42,13 @@ def signup():
         username = request.form['username']
         bio = request.form['bio']
         try: 
-            login_session['user'] = auth.create_user_with_email_and_password('email', 'password')
+            login_session['user'] = auth.create_user_with_email_and_password(email, password)
+            UID = login_session['user']['localId']
+            user = {"full_name": full_name, "username": username,"email": email, "password": password, "bio": bio }
+            db.child("Users").child(UID).set(user)
             return redirect(url_for('add_tweet'))
         except: 
             error = "Authentication Failed"
-    UID = login_session['user']['localId']
-    user = {"full_name": full_name, "username": username,"email": email, "password": password, "bio": bio }
-    db.child("User").child(UID).set(user)
 
     return render_template("signup.html")
 
@@ -59,8 +59,8 @@ def add_tweet():
         text = request.form['text']
         try:
             UID = login_session['user']['localId']
-            tweet = { "title": titel, "text": text, "UID": IUD}
-            db.child("User").child(UID).set(user)
+            tweet = { "title": title, "text": text, "UID": UID}
+            db.child('Tweets').push(tweet)
         except:
             error = "Authentication Failed"
             return redirect(url_for('add_tweet'))
@@ -68,7 +68,8 @@ def add_tweet():
 
 @app.route('/all_tweets', methods=['POST', 'GET'])
 def all_tweets():
-    tweets = db.child("user").get().val()
+    tweets = db.child("Tweets").get().val()
+    return render_template('tweets.html', tweets = tweets)
 
 
 if __name__ == '__main__':
